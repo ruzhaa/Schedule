@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "schedule"
+    }
+  },
+  "defaultProject": "schedule",
+  "cli": {
+    "analytics": false
+  }
 }
