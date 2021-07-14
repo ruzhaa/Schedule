@@ -5,6 +5,7 @@
 export const environment = {
     production: false,
     API_URL: `https://api.hacksoft.io/v1`,
+    SLOT_DURATION: 30, // slot/session duration in minutes
 };
 
 /*

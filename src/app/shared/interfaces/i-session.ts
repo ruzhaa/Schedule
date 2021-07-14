@@ -4,4 +4,6 @@ export interface ISession {
     category__slug: string;
     title: string;
     id: number;
+
+    duration(): number;
 }
