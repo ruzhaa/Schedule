@@ -18,9 +18,10 @@ export class Category implements ICategory {
             if (data['main_sponsor']) this.main_sponsor = new Sponsor(data.main_sponsor);
             if (data['sessions_count']) this.sessions_count = data.sessions_count;
             if (data['slug']) this.slug = data.slug;
-            if (data['sponsors']) this.sponsors = data.sponsors.map(x => new Sponsor(x));
+            if (data['sponsors']) this.sponsors = data.sponsors.map((x) => new Sponsor(x));
             if (data['title']) this.title = data.title;
-            if (data['unauthenticated_description']) this.unauthenticated_description = data.unauthenticated_description;
+            if (data['unauthenticated_description'])
+                this.unauthenticated_description = data.unauthenticated_description;
         }
     }
 }

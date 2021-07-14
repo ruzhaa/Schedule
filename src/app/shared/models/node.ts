@@ -10,7 +10,7 @@ export class Node implements INode {
         if (data) {
             if (data['category']) this.category = new Category(data.category);
             if (data['is_final_category']) this.is_final_category = data.is_final_category;
-            if (data['subcategories']) this.subcategories = data.subcategories.map(x => new Node(x));
+            if (data['subcategories']) this.subcategories = data.subcategories.map((x) => new Node(x));
         }
     }
 }
