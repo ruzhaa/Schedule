@@ -9,7 +9,7 @@ import { Session } from 'src/app/shared/models';
     providedIn: 'root',
 })
 export class CategoriesService {
-    constructor(private _http: HttpClient) { }
+    constructor(private _http: HttpClient) {}
 
     getAllCategories() {
         return this._http.get('/categories/list/').pipe(
@@ -22,9 +22,9 @@ export class CategoriesService {
     getSessionsForCategory(category: ICategory): Observable<ISession[]> {
         return this._http.get(`/categories/${category.slug}/retrieve/`).pipe(
             map((sessions: ISession[]) => {
-                return sessions.map(x => new Session(x));
+                return sessions.map((x) => new Session(x));
             })
-        )
+        );
     }
 
     getAllSessions(leaf_categories: ICategory[]): Observable<ISession[][]> {

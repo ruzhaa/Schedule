@@ -16,7 +16,7 @@ import { environment } from 'src/environments/environment';
 export class AuthInterceptor implements HttpInterceptor {
     private _API_URL: string = environment.API_URL;
 
-    constructor() { }
+    constructor() {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (req.url.startsWith('http') || req.url.startsWith('file')) {

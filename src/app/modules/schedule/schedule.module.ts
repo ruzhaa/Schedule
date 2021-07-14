@@ -4,14 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ScheduleRoutingModule } from './schedule-routing.module';
 import { ScheduleViewComponent } from './schedule-view/schedule-view.component';
 
-
 @NgModule({
-  declarations: [
-    ScheduleViewComponent
-  ],
-  imports: [
-    CommonModule,
-    ScheduleRoutingModule
-  ]
+    declarations: [ScheduleViewComponent],
+    imports: [CommonModule, ScheduleRoutingModule],
 })
-export class ScheduleModule { }
+export class ScheduleModule {}
