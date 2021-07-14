@@ -11,6 +11,12 @@ import { Session } from 'src/app/shared/models';
 export class ScheduleViewComponent implements OnInit {
     leaf_categories: ICategory[] = [];
     sessions: ISession[] = [];
+    groups_sessions: {
+        date: Date;
+        sessions: ISession[];
+    }[] = [];
+
+    slots: { [key: string]: ISession[] } = {};
 
     constructor(private _categorisService: CategoriesService) {}
 
@@ -26,8 +32,28 @@ export class ScheduleViewComponent implements OnInit {
                         this.sessions.push(new Session(session));
                     });
                 });
+
+                this.parseSessions(this.sessions);
             });
         });
+    }
+
+    parseSessions(sessions: ISession[]) {
+        this.slots = sessions.reduce((sessions, session) => {
+            const start_date = session.start.toISOString();
+            const end_date = session.end.toISOString();
+
+            if (!sessions[start_date]) {
+                sessions[start_date] = [];
+            }
+
+            if (!sessions[end_date]) {
+                sessions[end_date] = [];
+            }
+
+            sessions[start_date].push(session);
+            return sessions;
+        }, {});
     }
 
     getLeafCategories(node: INode) {

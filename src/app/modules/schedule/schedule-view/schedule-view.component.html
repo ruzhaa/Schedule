@@ -17,3 +17,18 @@
         </ul>
     </li>
 </ng-template> -->
+
+<div class="schedule">
+    <div class="slot-col" *ngFor="let slot of slots | keyvalue">
+        <div class="header">
+            <p>{{ slot.key | date: 'hh:mm a' }}</p>
+        </div>
+        <div class="sessions">
+            <div class="session-item slot-{{ session.duration() }}" *ngFor="let session of slot.value">
+                <p>
+                    {{ session.title }} - <strong>slots {{ session.duration() }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

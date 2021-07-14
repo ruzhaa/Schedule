@@ -1,0 +1,48 @@
+$slot_width: 200px;
+$max_count_slots: 10;
+$slot_padding: 5px;
+
+p {
+    margin: 0 0 7px 0;
+}
+
+.schedule {
+    width: 100%;
+    height: calc(100vh - 40px);
+    overflow: auto;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid rgb(146, 218, 231);
+
+    .slot-col {
+        width: $slot_width;
+        border: 1px solid rgb(146, 218, 231);
+
+        .header {
+            position: -webkit-sticky;
+            /* Safari */
+            position: sticky;
+            top: 0;
+            text-align: center;
+            border-bottom: 1px solid rgb(146, 218, 231);
+            font-weight: bold;
+        }
+
+        .sessions {
+            .session-item {
+                background-color: #eee;
+                border: 1px solid #ccc;
+                padding: $slot_padding;
+                margin-bottom: 10px;
+
+                // @for $i from 2 through $max_count_slots {
+
+                //     &.slot-#{$i} {
+                //         width: ($i * $slot_width) - ($slot_padding * 2);
+                //     }
+                // }
+            }
+        }
+    }
+}
