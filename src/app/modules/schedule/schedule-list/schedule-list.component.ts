@@ -14,7 +14,7 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
 
     subs: Subscription = new Subscription();
 
-    constructor(private _categoriesService: CategoriesService) { }
+    constructor(private _categoriesService: CategoriesService) {}
 
     ngOnInit(): void {
         this.subs.add(

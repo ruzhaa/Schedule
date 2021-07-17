@@ -17,23 +17,24 @@ export class ScheduleViewComponent implements OnInit, OnDestroy {
 
     subs: Subscription = new Subscription();
 
-    constructor(private _categoriesService: CategoriesService) { }
+    constructor(private _categoriesService: CategoriesService) {}
 
     ngOnInit(): void {
         this.subs.add(
             this._categoriesService.getAllCategories().subscribe((nodes: INode[]) => {
-                for (const node of nodes)
-                    this.getLeafCategories(node);
+                for (const node of nodes) this.getLeafCategories(node);
 
-                this._categoriesService.getAllSessions(this.leaf_categories).subscribe((category_sessions: ISession[][]) => {
-                    category_sessions.forEach((category_session: ISession[]) => {
-                        category_session.forEach((session: ISession) => {
-                            this.sessions.push(new Session(session));
+                this._categoriesService
+                    .getAllSessions(this.leaf_categories)
+                    .subscribe((category_sessions: ISession[][]) => {
+                        category_sessions.forEach((category_session: ISession[]) => {
+                            category_session.forEach((session: ISession) => {
+                                this.sessions.push(new Session(session));
+                            });
                         });
+                        this.parseSessions();
+                        this.parseSessionsMatrix();
                     });
-                    this.parseSessions();
-                    this.parseSessionsMatrix();
-                });
             })
         );
     }
@@ -44,8 +45,7 @@ export class ScheduleViewComponent implements OnInit, OnDestroy {
             return;
         }
 
-        for (const inner_node of node.subcategories)
-            this.getLeafCategories(inner_node);
+        for (const inner_node of node.subcategories) this.getLeafCategories(inner_node);
     }
 
     parseSessions(): void {
@@ -53,11 +53,9 @@ export class ScheduleViewComponent implements OnInit, OnDestroy {
             const start_date = session.start.toISOString();
             const end_date = session.end.toISOString();
 
-            if (!sessions[start_date])
-                sessions[start_date] = [];
+            if (!sessions[start_date]) sessions[start_date] = [];
 
-            if (!sessions[end_date])
-                sessions[end_date] = [];
+            if (!sessions[end_date]) sessions[end_date] = [];
 
             sessions[start_date].push(session);
             return sessions;
@@ -87,16 +85,16 @@ export class ScheduleViewComponent implements OnInit, OnDestroy {
             for (const [key, values] of this.sortSlotsSessions()) {
                 const node = values.length ? values[values.length - 1] : undefined;
 
-                if (node &&
+                if (
+                    node &&
                     (!previous_node_end || node.start.getTime() >= previous_node_end.getTime()) &&
-                    (max_count_slots - node.duration() >= 0)
+                    max_count_slots - node.duration() >= 0
                 ) {
                     previous_node_end = node.end;
                     row.push(node);
                     max_count_slots -= node.duration();
                     values.pop();
-                } else if (!previous_node_end || previous_node_end.getTime() <= new Date(key).getTime())
-                    row.push({});
+                } else if (!previous_node_end || previous_node_end.getTime() <= new Date(key).getTime()) row.push({});
 
                 max_rows = values.length > max_rows ? values.length : max_rows;
             }

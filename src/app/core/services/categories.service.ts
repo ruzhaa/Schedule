@@ -9,18 +9,16 @@ import { Session } from 'src/app/shared/models';
     providedIn: 'root',
 })
 export class CategoriesService {
-    constructor(private _http: HttpClient) { }
+    constructor(private _http: HttpClient) {}
 
     getAllCategories(): Observable<INode[]> {
-        return this._http.get('/categories/list/').pipe(
-            map((response) => response['results'])
-        );
+        return this._http.get('/categories/list/').pipe(map((response) => response['results']));
     }
 
     getSessionsForCategory(category: ICategory): Observable<ISession[]> {
-        return this._http.get(`/categories/${category.slug}/retrieve/`).pipe(
-            map((sessions: ISession[]) => sessions.map((x) => new Session(x)))
-        );
+        return this._http
+            .get(`/categories/${category.slug}/retrieve/`)
+            .pipe(map((sessions: ISession[]) => sessions.map((x) => new Session(x))));
     }
 
     getAllSessions(leaf_categories: ICategory[]): Observable<ISession[][]> {
