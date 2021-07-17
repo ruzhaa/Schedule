@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ICategory, ISession } from 'src/app/shared/interfaces';
+import { ICategory, INode, ISession } from 'src/app/shared/interfaces';
 import { Session } from 'src/app/shared/models';
 
 @Injectable({
@@ -11,10 +11,10 @@ import { Session } from 'src/app/shared/models';
 export class CategoriesService {
     constructor(private _http: HttpClient) {}
 
-    getAllCategories() {
+    getAllCategories(): Observable<INode[]> {
         return this._http.get('/categories/list/').pipe(
             map((response) => {
-                return response;
+                return response['results'];
             })
         );
     }

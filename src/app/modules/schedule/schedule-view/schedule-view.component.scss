@@ -1,48 +1,44 @@
-$slot_width: 200px;
-$max_count_slots: 10;
-$slot_padding: 5px;
+$cellContentHeight: 50px;
+$headerHeight: 50px;
+$cellWidth: 200px;
+$borderColor: #666;
 
-p {
-    margin: 0 0 7px 0;
-}
+.schedule-table {
+    border-collapse: collapse;
+    border: 1px solid $borderColor;
 
-.schedule {
-    width: 100%;
-    height: calc(100vh - 40px);
-    overflow: auto;
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: 1fr 1fr 1fr;
-    border: 1px solid rgb(146, 218, 231);
+    thead {
+        position: sticky;
+        top: 0;
+        background-color: #9bd5a2;
 
-    .slot-col {
-        width: $slot_width;
-        border: 1px solid rgb(146, 218, 231);
-
-        .header {
-            position: -webkit-sticky;
-            /* Safari */
-            position: sticky;
-            top: 0;
-            text-align: center;
-            border-bottom: 1px solid rgb(146, 218, 231);
+        th {
+            height: $headerHeight;
+            width: $cellWidth;
+            min-width: $cellWidth;
+            border: 1px solid $borderColor;
             font-weight: bold;
+            font-size: 22px;
         }
+    }
 
-        .sessions {
-            .session-item {
-                background-color: #eee;
-                border: 1px solid #ccc;
-                padding: $slot_padding;
-                margin-bottom: 10px;
+    td {
+        max-width: $cellWidth;
+        min-width: $cellWidth;
+        border-left: 1px solid $borderColor;
+        border-right: 1px solid $borderColor;
 
-                // @for $i from 2 through $max_count_slots {
-
-                //     &.slot-#{$i} {
-                //         width: ($i * $slot_width) - ($slot_padding * 2);
-                //     }
-                // }
-            }
+        .cell-content {
+            line-height: $cellContentHeight;
+            height: $cellContentHeight;
+            padding: 0 10px;
+            margin: 0;
+            border: 1px solid #9bd5a2;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 18px;
+            background-color: #d5ecda;
         }
     }
 }

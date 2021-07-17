@@ -10,4 +10,4 @@ import { SharedModule } from 'src/app/shared/shared.module';
     declarations: [ScheduleViewComponent, ScheduleListComponent],
     imports: [CommonModule, ScheduleRoutingModule, SharedModule],
 })
-export class ScheduleModule { }
+export class ScheduleModule {}

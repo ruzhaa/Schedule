@@ -1,34 +1,25 @@
-<!-- <ul>
-    <li *ngFor="let node of result_nodes">
-        <p>{{ node?.category?.title }}</p>
-        <p>slug: {{ node?.category?.slug }}</p>
-        <ul *ngIf="!node.is_final_category && node?.subcategories?.length">
-            <ng-container *ngTemplateOutlet="recursiveList; context: { $implicit: node.subcategories }"></ng-container>
-        </ul>
-    </li>
-</ul>
-
-<ng-template #recursiveList let-nodes>
-    <li *ngFor="let node of nodes">
-        <p>{{ node?.category?.title }}</p>
-        <p>slug: {{ node?.category?.slug }}</p>
-        <ul *ngIf="!node.is_final_category && node?.subcategories?.length">
-            <ng-container *ngTemplateOutlet="recursiveList; context: { $implicit: node.subcategories }"></ng-container>
-        </ul>
-    </li>
-</ng-template> -->
-
-<div class="schedule">
-    <div class="slot-col" *ngFor="let slot of slots | keyvalue">
-        <div class="header">
-            <p>{{ slot.key | date: 'hh:mm a' }}</p>
-        </div>
-        <div class="sessions">
-            <div class="session-item slot-{{ session.duration() }}" *ngFor="let session of slot.value">
-                <p>
-                    {{ session.title }} - <strong>slots {{ session.duration() }}</strong>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
+<table class="schedule-table">
+    <thead>
+        <tr>
+            <ng-container *ngFor="let slot of slots | keyvalue; last as isLast">
+                <th *ngIf="!isLast">{{ slot.key | date: 'hh:mm a' }}</th>
+            </ng-container>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of matrix">
+            <ng-container *ngFor="let session of row; last as isLast">
+                <ng-container *ngIf="!isLast">
+                    <ng-template #blank_node>
+                        <td></td>
+                    </ng-template>
+                    <td *ngIf="session?.id; else blank_node" [attr.colspan]="session?.duration()">
+                        <p class="cell-content" *ngIf="session?.id">
+                            {{ session.title }}
+                        </p>
+                    </td>
+                </ng-container>
+            </ng-container>
+        </tr>
+    </tbody>
+</table>
