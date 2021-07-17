@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CategoriesService } from 'src/app/core/services';
 import { INode } from 'src/app/shared/interfaces';
 import { Node } from 'src/app/shared/models';
@@ -8,14 +9,22 @@ import { Node } from 'src/app/shared/models';
     templateUrl: './schedule-list.component.html',
     styleUrls: ['./schedule-list.component.scss'],
 })
-export class ScheduleListComponent implements OnInit {
-    nodes: INode[];
+export class ScheduleListComponent implements OnInit, OnDestroy {
+    nodes: INode[] = [];
 
-    constructor(private _categorisService: CategoriesService) {}
+    subs: Subscription = new Subscription();
+
+    constructor(private _categoriesService: CategoriesService) { }
 
     ngOnInit(): void {
-        this._categorisService.getAllCategories().subscribe((nodes: INode[]) => {
-            this.nodes = nodes.map((x) => new Node(x));
-        });
+        this.subs.add(
+            this._categoriesService.getAllCategories().subscribe((nodes: INode[]) => {
+                this.nodes = nodes.map((x) => new Node(x));
+            })
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.subs.unsubscribe();
     }
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CategoriesService } from 'src/app/core/services';
 import { ICategory, INode, ISession } from 'src/app/shared/interfaces';
 import { Category, Session } from 'src/app/shared/models';
@@ -8,30 +9,33 @@ import { Category, Session } from 'src/app/shared/models';
     templateUrl: './schedule-view.component.html',
     styleUrls: ['./schedule-view.component.scss'],
 })
-export class ScheduleViewComponent implements OnInit {
+export class ScheduleViewComponent implements OnInit, OnDestroy {
     leaf_categories: ICategory[] = [];
     sessions: ISession[] = [];
     slots: { [key: string]: ISession[] } = {};
-    matrix = [];
+    sessions_matrix: ISession[][] = [];
 
-    constructor(private _categorisService: CategoriesService) {}
+    subs: Subscription = new Subscription();
+
+    constructor(private _categoriesService: CategoriesService) { }
 
     ngOnInit(): void {
-        this._categorisService.getAllCategories().subscribe((nodes: INode[]) => {
-            for (const node of nodes) {
-                this.getLeafCategories(node);
-            }
+        this.subs.add(
+            this._categoriesService.getAllCategories().subscribe((nodes: INode[]) => {
+                for (const node of nodes)
+                    this.getLeafCategories(node);
 
-            this._categorisService.getAllSessions(this.leaf_categories).subscribe((category_sessions: ISession[][]) => {
-                category_sessions.forEach((category_session: ISession[]) => {
-                    category_session.forEach((session: ISession) => {
-                        this.sessions.push(new Session(session));
+                this._categoriesService.getAllSessions(this.leaf_categories).subscribe((category_sessions: ISession[][]) => {
+                    category_sessions.forEach((category_session: ISession[]) => {
+                        category_session.forEach((session: ISession) => {
+                            this.sessions.push(new Session(session));
+                        });
                     });
+                    this.parseSessions();
+                    this.parseSessionsMatrix();
                 });
-                this.parseSessions();
-                this.parseMatrix();
-            });
-        });
+            })
+        );
     }
 
     getLeafCategories(node: INode): void {
@@ -40,9 +44,8 @@ export class ScheduleViewComponent implements OnInit {
             return;
         }
 
-        for (const inner_node of node.subcategories) {
+        for (const inner_node of node.subcategories)
             this.getLeafCategories(inner_node);
-        }
     }
 
     parseSessions(): void {
@@ -50,13 +53,11 @@ export class ScheduleViewComponent implements OnInit {
             const start_date = session.start.toISOString();
             const end_date = session.end.toISOString();
 
-            if (!sessions[start_date]) {
+            if (!sessions[start_date])
                 sessions[start_date] = [];
-            }
 
-            if (!sessions[end_date]) {
+            if (!sessions[end_date])
                 sessions[end_date] = [];
-            }
 
             sessions[start_date].push(session);
             return sessions;
@@ -73,39 +74,38 @@ export class ScheduleViewComponent implements OnInit {
         );
     }
 
-    parseMatrix(): void {
+    parseSessionsMatrix(): void {
         let row = [];
         let max_rows;
 
         while (max_rows !== 0) {
             row = [];
-            let previous_node_end: Date;
             max_rows = 0;
-
+            let previous_node_end: Date;
             let max_count_slots = Object.keys(this.slots).length - 1;
 
             for (const [key, values] of this.sortSlotsSessions()) {
                 const node = values.length ? values[values.length - 1] : undefined;
 
-                if (node) {
-                    if (
-                        (!previous_node_end || node.start.getTime() >= previous_node_end.getTime()) &&
-                        max_count_slots - node.duration() >= 0
-                    ) {
-                        previous_node_end = node.end;
-                        row.push(node);
-                        max_count_slots -= node.duration();
-                        values.pop();
-                    }
-                } else if (!previous_node_end || previous_node_end.getTime() <= new Date(key).getTime()) {
+                if (node &&
+                    (!previous_node_end || node.start.getTime() >= previous_node_end.getTime()) &&
+                    (max_count_slots - node.duration() >= 0)
+                ) {
+                    previous_node_end = node.end;
+                    row.push(node);
+                    max_count_slots -= node.duration();
+                    values.pop();
+                } else if (!previous_node_end || previous_node_end.getTime() <= new Date(key).getTime())
                     row.push({});
-                }
 
-                this.slots[key] = [...values];
-
-                if (values.length > max_rows) max_rows = values.length;
+                max_rows = values.length > max_rows ? values.length : max_rows;
             }
-            this.matrix.push(row);
+
+            this.sessions_matrix.push(row);
         }
+    }
+
+    ngOnDestroy(): void {
+        this.subs.unsubscribe();
     }
 }

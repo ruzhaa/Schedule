@@ -7,16 +7,14 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let row of matrix">
+        <tr *ngFor="let row of sessions_matrix">
             <ng-container *ngFor="let session of row; last as isLast">
                 <ng-container *ngIf="!isLast">
                     <ng-template #blank_node>
                         <td></td>
                     </ng-template>
                     <td *ngIf="session?.id; else blank_node" [attr.colspan]="session?.duration()">
-                        <p class="cell-content" *ngIf="session?.id">
-                            {{ session.title }}
-                        </p>
+                        <p class="cell-content">{{ session.title }}</p>
                     </td>
                 </ng-container>
             </ng-container>
