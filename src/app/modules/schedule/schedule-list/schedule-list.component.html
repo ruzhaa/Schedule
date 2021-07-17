@@ -1,0 +1,19 @@
+<ul>
+    <li *ngFor="let node of nodes">
+        <p><strong>title:</strong> {{ node?.category?.title }}</p>
+        <p><strong>slug:</strong> {{ node?.category?.slug }}</p>
+        <ul *ngIf="!node.is_final_category && node?.subcategories?.length">
+            <ng-container *ngTemplateOutlet="recursiveList; context: { $implicit: node.subcategories }"></ng-container>
+        </ul>
+    </li>
+</ul>
+
+<ng-template #recursiveList let-nodes>
+    <li *ngFor="let node of nodes">
+        <p><strong>title:</strong> {{ node?.category?.title }}</p>
+        <p><strong>slug:</strong> {{ node?.category?.slug }}</p>
+        <ul *ngIf="!node.is_final_category && node?.subcategories?.length">
+            <ng-container *ngTemplateOutlet="recursiveList; context: { $implicit: node.subcategories }"></ng-container>
+        </ul>
+    </li>
+</ng-template>
